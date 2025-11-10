@@ -1,0 +1,31 @@
+package builders
+
+import (
+	appsv1 "k8s.io/api/apps/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+)
+
+type DeploymentBuilder struct {
+	*commonDeployStateBuilder[DeploymentBuilder]
+	spec appsv1.DeploymentSpec
+}
+
+func Deployment(name string) *DeploymentBuilder {
+	b := &DeploymentBuilder{
+		spec: appsv1.DeploymentSpec{},
+	}
+	b.commonDeployStateBuilder = commonDeployState(name, b)
+	return b
+}
+
+func (b *DeploymentBuilder) Build() (runtime.Object, error) {
+	b.spec.Template = b.PodTemplateSpecBuilder.Build()
+	b.spec.Replicas = b.replicas
+	b.spec.Selector = b.selector
+	b.spec.MinReadySeconds = b.minReady
+	return &appsv1.Deployment{
+		TypeMeta:   deploymentType,
+		ObjectMeta: b.objectMetaBuilder.Build(),
+		Spec:       b.spec,
+	}, nil
+}
