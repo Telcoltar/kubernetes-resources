@@ -9,31 +9,40 @@ import (
 type PVCBuilder = PersistentVolumeClaimBuilder
 
 // Base builder type with generic parent
-type pvcBuilder[T any] struct {
+type pvcBaseBuilder[T any] struct {
+	*objectMetaBuilder[T]
 	spec   corev1.PersistentVolumeClaimSpec
-	parent T
+	parent *T
 }
 
-func (b *pvcBuilder[T]) AccessModes(modes ...corev1.PersistentVolumeAccessMode) T {
+func pvcBase[T any](name string, parent *T) *pvcBaseBuilder[T] {
+	return &pvcBaseBuilder[T]{
+		objectMetaBuilder: ObjectMeta(parent).name(name),
+		spec:              corev1.PersistentVolumeClaimSpec{},
+		parent:            parent,
+	}
+}
+
+func (b *pvcBaseBuilder[T]) AccessModes(modes ...corev1.PersistentVolumeAccessMode) *T {
 	b.spec.AccessModes = append(b.spec.AccessModes, modes...)
 	return b.parent
 }
 
-func (b *pvcBuilder[T]) SetStorageClass(name string) {
+func (b *pvcBaseBuilder[T]) SetStorageClass(name string) {
 	b.spec.StorageClassName = &name
 }
 
-func (b *pvcBuilder[T]) StorageClassP(name *string) T {
+func (b *pvcBaseBuilder[T]) StorageClassP(name *string) *T {
 	b.spec.StorageClassName = name
 	return b.parent
 }
 
-func (b *pvcBuilder[T]) StorageClass(name string) T {
+func (b *pvcBaseBuilder[T]) StorageClass(name string) *T {
 	b.SetStorageClass(name)
 	return b.parent
 }
 
-func (b *pvcBuilder[T]) Size(size string) T {
+func (b *pvcBaseBuilder[T]) Size(size string) *T {
 	b.spec.Resources = corev1.VolumeResourceRequirements{
 		Requests: corev1.ResourceList{
 			corev1.ResourceStorage: resource.MustParse(size),
@@ -44,8 +53,7 @@ func (b *pvcBuilder[T]) Size(size string) T {
 
 // PersistentVolumeClaimBuilder for standalone PVCs
 type PersistentVolumeClaimBuilder struct {
-	*objectMetaBuilder[PersistentVolumeClaimBuilder]
-	*pvcBuilder[*PersistentVolumeClaimBuilder]
+	*pvcBaseBuilder[PersistentVolumeClaimBuilder]
 }
 
 func PVC(name string) *PersistentVolumeClaimBuilder {
@@ -54,11 +62,7 @@ func PVC(name string) *PersistentVolumeClaimBuilder {
 
 func PersistentVolumeClaim(name string) *PersistentVolumeClaimBuilder {
 	b := &PersistentVolumeClaimBuilder{}
-	b.pvcBuilder = &pvcBuilder[*PersistentVolumeClaimBuilder]{
-		spec:   corev1.PersistentVolumeClaimSpec{},
-		parent: b,
-	}
-	b.objectMetaBuilder = ObjectMeta(b).name(name)
+	b.pvcBaseBuilder = pvcBase(name, b)
 	return b
 }
 
@@ -70,27 +74,22 @@ func (b *PersistentVolumeClaimBuilder) Build() (runtime.Object, error) {
 	}, nil
 }
 
-func (b *PersistentVolumeClaimBuilder) Volume() *VolumePVCBuilder {
+func (b *pvcBaseBuilder[T]) Volume() *VolumePVCBuilder {
 	return Volume(b.GetName()).PVC(b.GetName())
 }
 
-func (b *PersistentVolumeClaimBuilder) Mount(path string) *VolumeMountBuilder {
+func (b *pvcBaseBuilder[T]) Mount(path string) *VolumeMountBuilder {
 	return VolumeMount(b.GetName()).Path(path)
 }
 
 // PVCTemplateBuilder for StatefulSet volume claim templates
 type PVCTemplateBuilder struct {
-	*objectMetaBuilder[PVCTemplateBuilder]
-	*pvcBuilder[*PVCTemplateBuilder]
+	*pvcBaseBuilder[PVCTemplateBuilder]
 }
 
 func PVCTemplate(name string) *PVCTemplateBuilder {
 	b := &PVCTemplateBuilder{}
-	b.pvcBuilder = &pvcBuilder[*PVCTemplateBuilder]{
-		spec:   corev1.PersistentVolumeClaimSpec{},
-		parent: b,
-	}
-	b.objectMetaBuilder = ObjectMeta(b).name(name)
+	b.pvcBaseBuilder = pvcBase(name, b)
 	return b
 }
 
@@ -99,12 +98,4 @@ func (b *PVCTemplateBuilder) Build() corev1.PersistentVolumeClaim {
 		ObjectMeta: b.objectMetaBuilder.Build(),
 		Spec:       b.spec,
 	}
-}
-
-func (b *PVCTemplateBuilder) Volume() *VolumePVCBuilder {
-	return Volume(b.GetName()).PVC(b.GetName())
-}
-
-func (b *PVCTemplateBuilder) Mount(path string) *VolumeMountBuilder {
-	return VolumeMount(b.GetName()).Path(path)
 }
