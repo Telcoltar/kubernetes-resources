@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	postgres "github.com/telcoltar/kubernetes-builders/examples/postgres/module"
+	postgres "github.com/Telcoltar/kubernetes-resources/examples/postgres/module"
 )
 
 func main() {

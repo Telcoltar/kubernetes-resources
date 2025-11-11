@@ -4,8 +4,8 @@ package postgres
 import (
 	"fmt"
 
-	"github.com/telcoltar/kubernetes-builders/builders"
-	"github.com/telcoltar/kubernetes-builders/utils"
+	"github.com/Telcoltar/kubernetes-resources/builders"
+	"github.com/Telcoltar/kubernetes-resources/utils"
 
 	"k8s.io/apimachinery/pkg/labels"
 )
