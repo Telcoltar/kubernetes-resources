@@ -38,6 +38,14 @@ func ContainerPort() *ContainerPortBuilder {
 	return b
 }
 
+func (b *ContainerPortBuilder) GetName() string {
+	return b.port.Name
+}
+
+func (b *ContainerPortBuilder) GetPort() int32 {
+	return b.port.ContainerPort
+}
+
 func (b *ContainerPortBuilder) Port(port int32) *ContainerPortBuilder {
 	b.port.ContainerPort = port
 	return b
