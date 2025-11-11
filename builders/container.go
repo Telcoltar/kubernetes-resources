@@ -61,6 +61,11 @@ func (b *ContainerBuilder) Resources(rb *ResourceBuilder) *ContainerBuilder {
 	return b
 }
 
+func (b *ContainerBuilder) Args(args ...string) *ContainerBuilder {
+	b.container.Args = append(b.container.Args, args...)
+	return b
+}
+
 func (b *ContainerBuilder) VolumeMounts(mounts ...*VolumeMountBuilder) *ContainerBuilder {
 	b.mounts = append(b.mounts, mounts...)
 	return b
