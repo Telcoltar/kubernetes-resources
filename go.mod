@@ -1,4 +1,4 @@
-module github.com/telcoltar/kubernetes-builders
+module github.com/telcoltar/kubernetes-reesources
 
 go 1.25.0
 
