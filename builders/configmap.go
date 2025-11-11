@@ -41,3 +41,7 @@ func (b *ConfigMapBuilder) Build() (runtime.Object, error) {
 func (b *ConfigMapBuilder) Env(name string) *EnvKeyValuesBuilder {
 	return Env(name).FromConfigmap(b.meta.Name)
 }
+
+func (b *ConfigMapBuilder) Volume() *VolumeKeyPathBuilder {
+	return Volume(b.meta.Name).ConfigMap(b.meta.Name)
+}
