@@ -107,3 +107,40 @@ func (b *EnvKeyValuesBuilder) Build() corev1.EnvVar {
 		ValueFrom: b.valueFromFunc(b.key, b.optional),
 	}
 }
+
+type EnvFieldRefBuilder struct {
+	name string
+	path string
+}
+
+func (b *envBaseBuilder) NodeName() *EnvFieldRefBuilder {
+	return &EnvFieldRefBuilder{
+		name: b.name,
+		path: "spec.nodeName",
+	}
+}
+
+func (b *envBaseBuilder) Namespace() *EnvFieldRefBuilder {
+	return &EnvFieldRefBuilder{
+		name: b.name,
+		path: "metadata.namespace",
+	}
+}
+
+func (b *envBaseBuilder) FieldRef(path string) *EnvFieldRefBuilder {
+	return &EnvFieldRefBuilder{
+		name: b.name,
+		path: path,
+	}
+}
+
+func (b *EnvFieldRefBuilder) Build() corev1.EnvVar {
+	return corev1.EnvVar{
+		Name: b.name,
+		ValueFrom: &corev1.EnvVarSource{
+			FieldRef: &corev1.ObjectFieldSelector{
+				FieldPath: b.path,
+			},
+		},
+	}
+}
