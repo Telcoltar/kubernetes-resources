@@ -41,3 +41,8 @@ var roleBindingType = metav1.TypeMeta{
 	APIVersion: "rbac/v1",
 	Kind:       "RoleBinding",
 }
+
+var serviceAccountType = metav1.TypeMeta{
+	APIVersion: "v1",
+	Kind:       "ServiceAccount",
+}
