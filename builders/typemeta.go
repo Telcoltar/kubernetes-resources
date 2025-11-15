@@ -22,6 +22,11 @@ var deploymentType = metav1.TypeMeta{
 	Kind:       "Deployment",
 }
 
+var daemonSetType = metav1.TypeMeta{
+	APIVersion: "apps/v1",
+	Kind:       "DaemonSet",
+}
+
 var statefulSetType = metav1.TypeMeta{
 	APIVersion: "apps/v1",
 	Kind:       "StatefulSet",

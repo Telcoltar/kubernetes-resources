@@ -6,7 +6,7 @@ import (
 )
 
 type DeploymentBuilder struct {
-	*commonDeployStateBuilder[DeploymentBuilder]
+	*commonWorkloadBuilder[DeploymentBuilder]
 	spec     appsv1.DeploymentSpec
 	strategy DeploymentStrategyBuilderI
 }
@@ -15,7 +15,7 @@ func Deployment(name string) *DeploymentBuilder {
 	b := &DeploymentBuilder{
 		spec: appsv1.DeploymentSpec{},
 	}
-	b.commonDeployStateBuilder = commonDeployState(name, b)
+	b.commonWorkloadBuilder = commonWorkloadState(name, b)
 	return b
 }
 

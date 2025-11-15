@@ -6,7 +6,7 @@ import (
 )
 
 type StatefulSetBuilder struct {
-	*commonDeployStateBuilder[StatefulSetBuilder]
+	*commonWorkloadBuilder[StatefulSetBuilder]
 	pvcTemplates []*PVCTemplateBuilder
 	spec         appsv1.StatefulSetSpec
 }
@@ -15,7 +15,7 @@ func StatefulSet(name string) *StatefulSetBuilder {
 	b := &StatefulSetBuilder{
 		spec: appsv1.StatefulSetSpec{},
 	}
-	b.commonDeployStateBuilder = commonDeployState(name, b)
+	b.commonWorkloadBuilder = commonWorkloadState(name, b)
 	return b
 }
 
