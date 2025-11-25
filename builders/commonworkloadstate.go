@@ -1,8 +1,9 @@
 package builders
 
 import (
+	"maps"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
 )
 
 type commonWorkloadBuilder[P any] struct {
@@ -21,6 +22,7 @@ func commonWorkloadState[P any](name string, parent *P) *commonWorkloadBuilder[P
 		parent: parent,
 	}
 	b.objectMetaBuilder = ObjectMeta(parent).name(name)
+	b.selector = &metav1.LabelSelector{}
 	b.PodTemplateSpecBuilder = PodTempalteSpec(parent)
 	return b
 }
@@ -50,9 +52,16 @@ func (b *commonWorkloadBuilder[P]) Replicas(replicas int32) *P {
 	return b.parent
 }
 
-func (b *commonWorkloadBuilder[P]) Selector(selectors labels.Set) *P {
-	b.selector = metav1.SetAsLabelSelector(selectors)
+func (b *commonWorkloadBuilder[P]) SelectorLabels(labels map[string]string) *P {
+	if b.selector.MatchLabels == nil {
+		b.selector.MatchLabels = make(map[string]string)
+	}
+	maps.Copy(b.selector.MatchLabels, labels)
 	return b.parent
+}
+
+func (b *commonWorkloadBuilder[P]) SelectorLabel(key, value string) *P {
+	return b.SelectorLabels(map[string]string{key: value})
 }
 
 func (b *commonWorkloadBuilder[P]) MinReady(seconds int32) *P {

@@ -68,7 +68,7 @@ func (b *PostgresBuilder) Assemble() builders.Builders {
 		Selectors(labels)
 
 	statefulSet := builders.StatefulSet(instance).Containers(mainContainer).
-		Selector(labels).ServiceName(service.GetName()).
+		SelectorLabels(labels).ServiceName(service.GetName()).
 		ClaimTepmplates(dataTemplate).MinReady(50)
 
 	components = append(components, passwordSecret, service, statefulSet)
