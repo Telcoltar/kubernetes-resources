@@ -51,3 +51,8 @@ var serviceAccountType = metav1.TypeMeta{
 	APIVersion: "v1",
 	Kind:       "ServiceAccount",
 }
+
+var routeType = metav1.TypeMeta{
+	APIVersion: "route.openshift.io/v1",
+	Kind:       "Route",
+}
