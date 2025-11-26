@@ -56,3 +56,8 @@ var routeType = metav1.TypeMeta{
 	APIVersion: "route.openshift.io/v1",
 	Kind:       "Route",
 }
+
+var ingressType = metav1.TypeMeta{
+	Kind:       "Ingress",
+	APIVersion: "networking.k8s.io/v1",
+}
