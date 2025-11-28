@@ -14,6 +14,8 @@ var s = json.NewSerializerWithOptions(
 	scheme.Scheme,           // The scheme for type creation
 	json.SerializerOptions{
 		Yaml: true, // We want JSON output, not YAML
+		Pretty: true,
+        Strict: true,
 	},
 )
 
