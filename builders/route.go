@@ -44,19 +44,19 @@ func (b *RouteBuilder) ToWithWeight(serviceName string, weight int32) *RouteBuil
 	return b
 }
 
-func (b *RouteBuilder) Port(port intstr.IntOrString) *RouteBuilder {
+func (b *RouteBuilder) port(port intstr.IntOrString) *RouteBuilder {
 	b.spec.Port = &routev1.RoutePort{
 		TargetPort: port,
 	}
 	return b
 }
 
-func (b *RouteBuilder) PortNamed(portName string) *RouteBuilder {
-	return b.Port(intstr.FromString(portName))
+func (b *RouteBuilder) PortName(portName string) *RouteBuilder {
+	return b.port(intstr.FromString(portName))
 }
 
-func (b *RouteBuilder) PortNumber(portNumber int) *RouteBuilder {
-	return b.Port(intstr.FromInt(portNumber))
+func (b *RouteBuilder) Port(number int32) *RouteBuilder {
+	return b.port(intstr.FromInt32(number))
 }
 
 func (b *RouteBuilder) TLS(tls *routev1.TLSConfig) *RouteBuilder {

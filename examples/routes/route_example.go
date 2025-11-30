@@ -14,14 +14,14 @@ func main() {
 		Host("myapp.example.com").
 		Path("/api").
 		To("my-app-service").
-		PortNamed("http")
+		PortName("http")
 
 	// Example 2: HTTPS route with edge termination
 	httpsRoute := builders.Route("secure-route").
 		Namespace("default").
 		Host("secure.example.com").
 		To("secure-service").
-		PortNumber(8443).
+		Port(8443).
 		TLSEdge().
 		InsecureEdgeTerminationPolicy("Redirect")
 
@@ -30,7 +30,7 @@ func main() {
 		Namespace("default").
 		Host("passthrough.example.com").
 		To("tls-service").
-		PortNamed("https").
+		PortName("https").
 		TLSPassthrough()
 
 	// Build and print YAML
