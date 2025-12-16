@@ -38,12 +38,12 @@ var persistentVolumeClaimType = metav1.TypeMeta{
 }
 
 var roleType = metav1.TypeMeta{
-	APIVersion: "rbac/v1",
+	APIVersion: "rbac.authorization.k8s.io/v1",
 	Kind:       "Role",
 }
 
 var roleBindingType = metav1.TypeMeta{
-	APIVersion: "rbac/v1",
+	APIVersion: "rbac.authorization.k8s.io/v1",
 	Kind:       "RoleBinding",
 }
 
